@@ -37,6 +37,7 @@ export const config = {
     poppler: process.env.POPPLER_PATH || '/opt/homebrew/bin/pdftoppm',
     imagemagick: process.env.IMAGEMAGICK_PATH || '/opt/homebrew/bin/magick',
     tesseract: process.env.TESSERACT_PATH || '/opt/homebrew/bin/tesseract',
+    openssl: process.env.OPENSSL_PATH || '/usr/bin/openssl',
   },
 };
 

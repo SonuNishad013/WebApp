@@ -7,6 +7,15 @@ import CompressPDF from './components/CompressPDF';
 import PDFToWord from './components/PDFToWord';
 import PDFToPowerPoint from './components/PDFToPowerPoint';
 import PDFToExcel from './components/PDFToExcel';
+import WordToPDF from './components/WordToPDF';
+import PowerPointToPDF from './components/PowerPointToPDF';
+import ExcelToPDF from './components/ExcelToPDF';
+import EditPDF from './components/EditPDF';
+import PDFToJPG from './components/PDFToJPG';
+import JPGToPDF from './components/JPGToPDF';
+import SignPDF from './components/SignPDF';
+import WatermarkPDF from './components/WatermarkPDF';
+import TXTToPDF from './components/TXTToPDF';
 import './index.css';
 
 function App() {
@@ -19,6 +28,15 @@ function App() {
     { id: 'pdf-to-word', label: 'PDF → Word', component: PDFToWord },
     { id: 'pdf-to-ppt', label: 'PDF → PPT', component: PDFToPowerPoint },
     { id: 'pdf-to-excel', label: 'PDF → Excel', component: PDFToExcel },
+    { id: 'word-to-pdf', label: 'Word → PDF', component: WordToPDF },
+    { id: 'ppt-to-pdf', label: 'PPT → PDF', component: PowerPointToPDF },
+    { id: 'excel-to-pdf', label: 'Excel → PDF', component: ExcelToPDF },
+    { id: 'edit-pdf', label: 'Edit PDF', component: EditPDF },
+    { id: 'pdf-to-jpg', label: 'PDF → JPG', component: PDFToJPG },
+    { id: 'jpg-to-pdf', label: 'JPG → PDF', component: JPGToPDF },
+    { id: 'sign-pdf', label: 'Sign PDF', component: SignPDF },
+    { id: 'watermark', label: 'Watermark', component: WatermarkPDF },
+    { id: 'txt-to-pdf', label: 'TXT → PDF', component: TXTToPDF },
   ];
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component;
@@ -69,7 +87,7 @@ function App() {
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 bg-dark-surface p-2 rounded-xl border border-dark-border">
+          <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-15 gap-2 bg-dark-surface p-2 rounded-xl border border-dark-border">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -125,10 +143,10 @@ function App() {
         >
           <div className="flex items-center justify-center space-x-2">
             <FileText size={16} />
-            <span>Part 1 & 2: PDF Processing & Conversion Services</span>
+            <span>Parts 1-5: PDF Processing, Conversion, Image & Security Services</span>
           </div>
           <p className="mt-2">
-            Powered by open-source tools • qpdf • Ghostscript • LibreOffice
+            Powered by qpdf • Ghostscript • LibreOffice • Poppler • ImageMagick • OpenSSL
           </p>
         </motion.div>
       </div>

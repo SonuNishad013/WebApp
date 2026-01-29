@@ -3,6 +3,8 @@ import cors from 'cors';
 import config from './config.js';
 import pdfRoutes from './routes/pdfRoutes.js';
 import conversionRoutes from './routes/conversionRoutes.js';
+import imageRoutes from './routes/imageRoutes.js';
+import securityRoutes from './routes/securityRoutes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { handleMulterError } from './middleware/upload.js';
 import { ensureDirectories, startPeriodicCleanup } from './utils/fileUtils.js';
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/pdf', pdfRoutes);
 app.use('/api/convert', conversionRoutes);
+app.use('/api/image', imageRoutes);
+app.use('/api/security', securityRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -85,12 +89,32 @@ async function initializeServer() {
       console.log(`   Environment: ${config.nodeEnv}`);
       console.log(`   Max file size: ${(config.maxFileSize / (1024 * 1024)).toFixed(2)}MB`);
       console.log(`\n📡 API Endpoints:`);
+      console.log(`   Part 1: PDF Operations`);
       console.log(`   POST http://localhost:${config.port}/api/pdf/merge`);
       console.log(`   POST http://localhost:${config.port}/api/pdf/split`);
       console.log(`   POST http://localhost:${config.port}/api/pdf/compress`);
+      console.log(``);
+      console.log(`   Part 2: PDF to Office`);
       console.log(`   POST http://localhost:${config.port}/api/convert/pdf-to-word`);
       console.log(`   POST http://localhost:${config.port}/api/convert/pdf-to-powerpoint`);
       console.log(`   POST http://localhost:${config.port}/api/convert/pdf-to-excel`);
+      console.log(``);
+      console.log(`   Part 3: Office to PDF`);
+      console.log(`   POST http://localhost:${config.port}/api/convert/word-to-pdf`);
+      console.log(`   POST http://localhost:${config.port}/api/convert/powerpoint-to-pdf`);
+      console.log(`   POST http://localhost:${config.port}/api/convert/excel-to-pdf`);
+      console.log(``);
+      console.log(`   Part 4: Image & Editing Services`);
+      console.log(`   POST http://localhost:${config.port}/api/image/pdf-to-jpg`);
+      console.log(`   POST http://localhost:${config.port}/api/image/jpg-to-pdf`);
+      console.log(`   POST http://localhost:${config.port}/api/image/edit-pdf`);
+      console.log(``);
+      console.log(`   Part 5: Security & Enhancement Services`);
+      console.log(`   POST http://localhost:${config.port}/api/security/sign-pdf`);
+      console.log(`   POST http://localhost:${config.port}/api/security/watermark-pdf`);
+      console.log(`   POST http://localhost:${config.port}/api/security/txt-to-pdf`);
+      console.log(``);
+      console.log(`   Health Check`);
       console.log(`   GET  http://localhost:${config.port}/api/pdf/health`);
       console.log(`   GET  http://localhost:${config.port}/health\n`);
     });

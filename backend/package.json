@@ -24,7 +24,8 @@
     "uuid": "^9.0.1",
     "bull": "^4.12.0",
     "redis": "^4.6.10",
-    "file-type": "^18.5.0"
+    "file-type": "^18.5.0",
+    "archiver": "^6.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

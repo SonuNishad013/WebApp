@@ -6,8 +6,9 @@ import { getTempFilePath, generateUniqueFilename } from '../utils/fileUtils.js';
 import { validatePDF, validateFile } from '../utils/validation.js';
 
 /**
- * Part 2 Conversion Services
- * PDF to Office Format Conversions
+ * Part 2 & Part 3 Conversion Services
+ * Part 2: PDF to Office Format Conversions
+ * Part 3: Office to PDF Conversions
  */
 
 /**
@@ -82,6 +83,220 @@ export async function pdfToWord(inputFile, options = {}) {
     };
   } catch (error) {
     console.error('PDF to Word error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Part 3: Office to PDF Conversions
+ */
+
+/**
+ * Convert Word (DOCX) to PDF
+ * Uses LibreOffice headless mode with PDF export filter
+ * 
+ * Pipeline:
+ * Upload → Validate → Layout Render → Font Resolve → PDF Export → Store → Deliver
+ * 
+ * @param {Object} inputFile - Uploaded DOCX file
+ * @param {Object} options - Conversion options
+ * @returns {Object} - Conversion result with output path
+ */
+export async function wordToPDF(inputFile, options = {}) {
+  try {
+    // Validate input file exists and is accessible
+    await validateFile(inputFile.path, ['.docx', '.doc']);
+
+    console.log(`Converting Word to PDF: ${inputFile.originalname}`);
+
+    // Create output directory for this conversion
+    const outputDir = getTempFilePath('', 'outputs');
+    const outputBasename = path.basename(inputFile.originalname, path.extname(inputFile.originalname));
+    const outputFilename = generateUniqueFilename(`${outputBasename}.pdf`);
+    const outputPath = path.join(outputDir, outputFilename);
+
+    // LibreOffice headless conversion command
+    // soffice --headless --convert-to pdf --outdir <outputDir> <inputFile>
+    const command = `"${config.tools.libreoffice}" --headless --convert-to pdf --outdir ${escapeShellArg(outputDir)} ${escapeShellArg(inputFile.path)}`;
+
+    console.log('Executing Word to PDF conversion:', command);
+
+    // Execute command
+    const result = await executeCommand(command, { timeout: 180000 }); // 3 minutes timeout
+
+    if (!result.success) {
+      throw new Error(`Word to PDF conversion failed: ${result.error}`);
+    }
+
+    // LibreOffice creates file with same basename as input
+    const libreOfficeOutput = path.join(outputDir, path.basename(inputFile.path, path.extname(inputFile.path)) + '.pdf');
+    
+    // Rename to our unique filename
+    try {
+      await fs.rename(libreOfficeOutput, outputPath);
+    } catch (renameError) {
+      console.error('Output file not found at expected location:', libreOfficeOutput);
+      const files = await fs.readdir(outputDir);
+      console.log('Files in output directory:', files);
+      throw new Error('Conversion completed but output file not found');
+    }
+
+    // Verify output file exists
+    try {
+      await fs.access(outputPath);
+    } catch (error) {
+      throw new Error('Conversion completed but output file is not accessible');
+    }
+
+    return {
+      success: true,
+      outputPath,
+      outputFilename,
+      originalFormat: 'docx',
+      targetFormat: 'pdf',
+    };
+  } catch (error) {
+    console.error('Word to PDF error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Convert PowerPoint (PPTX) to PDF
+ * Uses LibreOffice headless mode with slide rendering
+ * 
+ * Pipeline:
+ * Upload → Validate → Slide Render → Vector Export → PDF Export → Store → Deliver
+ * 
+ * @param {Object} inputFile - Uploaded PPTX file
+ * @param {Object} options - Conversion options
+ * @returns {Object} - Conversion result with output path
+ */
+export async function powerPointToPDF(inputFile, options = {}) {
+  try {
+    // Validate input file exists and is accessible
+    await validateFile(inputFile.path, ['.pptx', '.ppt']);
+
+    console.log(`Converting PowerPoint to PDF: ${inputFile.originalname}`);
+
+    // Create output directory for this conversion
+    const outputDir = getTempFilePath('', 'outputs');
+    const outputBasename = path.basename(inputFile.originalname, path.extname(inputFile.originalname));
+    const outputFilename = generateUniqueFilename(`${outputBasename}.pdf`);
+    const outputPath = path.join(outputDir, outputFilename);
+
+    // LibreOffice headless conversion command
+    // soffice --headless --convert-to pdf --outdir <outputDir> <inputFile>
+    const command = `"${config.tools.libreoffice}" --headless --convert-to pdf --outdir ${escapeShellArg(outputDir)} ${escapeShellArg(inputFile.path)}`;
+
+    console.log('Executing PowerPoint to PDF conversion:', command);
+
+    // Execute command
+    const result = await executeCommand(command, { timeout: 180000 }); // 3 minutes timeout
+
+    if (!result.success) {
+      throw new Error(`PowerPoint to PDF conversion failed: ${result.error}`);
+    }
+
+    // LibreOffice creates file with same basename as input
+    const libreOfficeOutput = path.join(outputDir, path.basename(inputFile.path, path.extname(inputFile.path)) + '.pdf');
+    
+    // Rename to our unique filename
+    try {
+      await fs.rename(libreOfficeOutput, outputPath);
+    } catch (renameError) {
+      console.error('Output file not found at expected location:', libreOfficeOutput);
+      const files = await fs.readdir(outputDir);
+      console.log('Files in output directory:', files);
+      throw new Error('Conversion completed but output file not found');
+    }
+
+    // Verify output file exists
+    try {
+      await fs.access(outputPath);
+    } catch (error) {
+      throw new Error('Conversion completed but output file is not accessible');
+    }
+
+    return {
+      success: true,
+      outputPath,
+      outputFilename,
+      originalFormat: 'pptx',
+      targetFormat: 'pdf',
+    };
+  } catch (error) {
+    console.error('PowerPoint to PDF error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Convert Excel (XLSX) to PDF
+ * Uses LibreOffice headless mode with sheet layout and page break control
+ * 
+ * Pipeline:
+ * Upload → Validate → Sheet Layout → Page Break Control → PDF Export → Store → Deliver
+ * 
+ * @param {Object} inputFile - Uploaded XLSX file
+ * @param {Object} options - Conversion options
+ * @returns {Object} - Conversion result with output path
+ */
+export async function excelToPDF(inputFile, options = {}) {
+  try {
+    // Validate input file exists and is accessible
+    await validateFile(inputFile.path, ['.xlsx', '.xls']);
+
+    console.log(`Converting Excel to PDF: ${inputFile.originalname}`);
+
+    // Create output directory for this conversion
+    const outputDir = getTempFilePath('', 'outputs');
+    const outputBasename = path.basename(inputFile.originalname, path.extname(inputFile.originalname));
+    const outputFilename = generateUniqueFilename(`${outputBasename}.pdf`);
+    const outputPath = path.join(outputDir, outputFilename);
+
+    // LibreOffice headless conversion command
+    // soffice --headless --convert-to pdf --outdir <outputDir> <inputFile>
+    const command = `"${config.tools.libreoffice}" --headless --convert-to pdf --outdir ${escapeShellArg(outputDir)} ${escapeShellArg(inputFile.path)}`;
+
+    console.log('Executing Excel to PDF conversion:', command);
+
+    // Execute command
+    const result = await executeCommand(command, { timeout: 180000 }); // 3 minutes timeout
+
+    if (!result.success) {
+      throw new Error(`Excel to PDF conversion failed: ${result.error}`);
+    }
+
+    // LibreOffice creates file with same basename as input
+    const libreOfficeOutput = path.join(outputDir, path.basename(inputFile.path, path.extname(inputFile.path)) + '.pdf');
+    
+    // Rename to our unique filename
+    try {
+      await fs.rename(libreOfficeOutput, outputPath);
+    } catch (renameError) {
+      console.error('Output file not found at expected location:', libreOfficeOutput);
+      const files = await fs.readdir(outputDir);
+      console.log('Files in output directory:', files);
+      throw new Error('Conversion completed but output file not found');
+    }
+
+    // Verify output file exists
+    try {
+      await fs.access(outputPath);
+    } catch (error) {
+      throw new Error('Conversion completed but output file is not accessible');
+    }
+
+    return {
+      success: true,
+      outputPath,
+      outputFilename,
+      originalFormat: 'xlsx',
+      targetFormat: 'pdf',
+    };
+  } catch (error) {
+    console.error('Excel to PDF error:', error);
     throw error;
   }
 }
