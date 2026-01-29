@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'multipart/form-data',
+    "Content-Type": "multipart/form-data",
   },
 });
 
@@ -14,16 +14,18 @@ const api = axios.create({
  */
 export const mergePDFs = async (files, onProgress) => {
   const formData = new FormData();
-  files.forEach(file => {
-    formData.append('files', file);
+  files.forEach((file) => {
+    formData.append("files", file);
   });
 
   try {
-    const response = await api.post('/pdf/merge', formData, {
-      responseType: 'blob',
+    const response = await api.post("/pdf/merge", formData, {
+      responseType: "blob",
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
           onProgress(percentCompleted);
         }
       },
@@ -32,37 +34,44 @@ export const mergePDFs = async (files, onProgress) => {
     return {
       success: true,
       blob: response.data,
-      filename: 'merged.pdf',
+      filename: "merged.pdf",
     };
   } catch (error) {
-    console.error('Merge error:', error);
-    throw new Error(error.response?.data?.error || 'Failed to merge PDFs');
+    console.error("Merge error:", error);
+    throw new Error(error.response?.data?.error || "Failed to merge PDFs");
   }
 };
 
 /**
  * Split PDF into pages
  */
-export const splitPDF = async (file, mode = 'individual', pageRanges = null, onProgress) => {
+export const splitPDF = async (
+  file,
+  mode = "individual",
+  pageRanges = null,
+  onProgress,
+) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('mode', mode);
+  formData.append("file", file);
+  formData.append("mode", mode);
   if (pageRanges) {
-    formData.append('pageRanges', pageRanges);
+    formData.append("pageRanges", pageRanges);
   }
 
   try {
-    const response = await api.post('/pdf/split', formData, {
-      responseType: mode === 'range' ? 'blob' : 'json',
+    const response = await api.post("/pdf/split", formData, {
+      responseType: mode === "range" ? "blob" : "json",
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
           onProgress(percentCompleted);
         }
       },
     });
 
-    if (mode === 'range') {
+    if (mode === "range") {
       return {
         success: true,
         blob: response.data,
@@ -75,25 +84,27 @@ export const splitPDF = async (file, mode = 'individual', pageRanges = null, onP
       };
     }
   } catch (error) {
-    console.error('Split error:', error);
-    throw new Error(error.response?.data?.error || 'Failed to split PDF');
+    console.error("Split error:", error);
+    throw new Error(error.response?.data?.error || "Failed to split PDF");
   }
 };
 
 /**
  * Compress PDF
  */
-export const compressPDF = async (file, quality = 'ebook', onProgress) => {
+export const compressPDF = async (file, quality = "ebook", onProgress) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('quality', quality);
+  formData.append("file", file);
+  formData.append("quality", quality);
 
   try {
-    const response = await api.post('/pdf/compress', formData, {
-      responseType: 'blob',
+    const response = await api.post("/pdf/compress", formData, {
+      responseType: "blob",
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
           onProgress(percentCompleted);
         }
       },
@@ -105,8 +116,31 @@ export const compressPDF = async (file, quality = 'ebook', onProgress) => {
       filename: `compressed_${quality}.pdf`,
     };
   } catch (error) {
-    console.error('Compress error:', error);
-    throw new Error(error.response?.data?.error || 'Failed to compress PDF');
+    console.error("Compress error:", error);
+    throw new Error(error.response?.data?.error || "Failed to compress PDF");
+  }
+};
+
+/**
+ * Generic file upload function
+ */
+export const uploadFile = async (endpoint, formData, onProgress) => {
+  try {
+    const response = await api.post(endpoint, formData, {
+      responseType: "blob",
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          onProgress(percentCompleted);
+        }
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Upload error:", error);
+    throw new Error(error.response?.data?.error || "Upload failed");
   }
 };
 
@@ -115,10 +149,10 @@ export const compressPDF = async (file, quality = 'ebook', onProgress) => {
  */
 export const checkHealth = async () => {
   try {
-    const response = await api.get('/pdf/health');
+    const response = await api.get("/pdf/health");
     return response.data;
   } catch (error) {
-    console.error('Health check error:', error);
+    console.error("Health check error:", error);
     return { success: false, error: error.message };
   }
 };
