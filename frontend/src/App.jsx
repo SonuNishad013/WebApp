@@ -20,7 +20,7 @@ import './index.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('merge');
-
+//Neel Thakur, checking the app tsx.
   const tabs = [
     { id: 'merge', label: 'Merge', component: MergePDF },
     { id: 'split', label: 'Split', component: SplitPDF },
