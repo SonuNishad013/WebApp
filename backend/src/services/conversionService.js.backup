@@ -105,7 +105,7 @@ export async function pdfToWord(inputFile, options = {}) {
 export async function wordToPDF(inputFile, options = {}) {
   try {
     // Validate input file exists and is accessible
-    await validateFile(inputFile.path, inputFile.originalname);
+    await validateFile(inputFile.path, ['.docx', '.doc']);
 
     console.log(`Converting Word to PDF: ${inputFile.originalname}`);
 
@@ -175,7 +175,7 @@ export async function wordToPDF(inputFile, options = {}) {
 export async function powerPointToPDF(inputFile, options = {}) {
   try {
     // Validate input file exists and is accessible
-    await validateFile(inputFile.path, inputFile.originalname);
+    await validateFile(inputFile.path, ['.pptx', '.ppt']);
 
     console.log(`Converting PowerPoint to PDF: ${inputFile.originalname}`);
 
@@ -245,7 +245,7 @@ export async function powerPointToPDF(inputFile, options = {}) {
 export async function excelToPDF(inputFile, options = {}) {
   try {
     // Validate input file exists and is accessible
-    await validateFile(inputFile.path, inputFile.originalname);
+    await validateFile(inputFile.path, ['.xlsx', '.xls']);
 
     console.log(`Converting Excel to PDF: ${inputFile.originalname}`);
 

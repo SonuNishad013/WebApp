@@ -12,7 +12,7 @@ import PowerPointToPDF from './components/PowerPointToPDF';
 import ExcelToPDF from './components/ExcelToPDF';
 import EditPDF from './components/EditPDF';
 import PDFToJPG from './components/PDFToJPG';
-import JPGToPDF from './components/JPGToPDF';
+import ImageToPDF from './components/ImageToPDF';
 import SignPDF from './components/SignPDF';
 import WatermarkPDF from './components/WatermarkPDF';
 import TXTToPDF from './components/TXTToPDF';
@@ -33,7 +33,7 @@ function App() {
     { id: 'excel-to-pdf', label: 'Excel → PDF', component: ExcelToPDF },
     { id: 'edit-pdf', label: 'Edit PDF', component: EditPDF },
     { id: 'pdf-to-jpg', label: 'PDF → JPG', component: PDFToJPG },
-    { id: 'jpg-to-pdf', label: 'JPG → PDF', component: JPGToPDF },
+    { id: 'jpg-to-pdf', label: 'Image → PDF', component: ImageToPDF },
     { id: 'sign-pdf', label: 'Sign PDF', component: SignPDF },
     { id: 'watermark', label: 'Watermark', component: WatermarkPDF },
     { id: 'txt-to-pdf', label: 'TXT → PDF', component: TXTToPDF },

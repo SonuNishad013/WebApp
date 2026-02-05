@@ -61,13 +61,13 @@
   "suites": [],
   "errors": [
     {
-      "message": "Error: Timed out waiting 120000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 120000ms from config.webServer."
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
     }
   ],
   "stats": {
-    "startTime": "2026-01-29T11:35:34.103Z",
-    "duration": 120334.444,
+    "startTime": "2026-02-05T10:54:37.696Z",
+    "duration": 613.517,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,
