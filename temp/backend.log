@@ -1,0 +1,60 @@
+
+> pdf-conversion-backend@1.0.0 start
+> node src/server.js
+
+✓ Directories initialized
+Checking conversion tools...
+Command execution error: Command failed: "/opt/homebrew/bin/pdftoppm" --version
+I/O Error: Couldn't open file '--version': No such file or directory.
+
+Tool availability:
+  qpdf: ✓
+  ghostscript: ✓
+  libreoffice: ✓
+  poppler: ✗
+  imagemagick: ✓
+  tesseract: ✓
+  openssl: ✓
+
+⚠️  Warning: The following tools are not available: poppler
+Some conversion features may not work properly.
+Install missing tools using Homebrew:
+
+  brew install poppler
+
+Periodic cleanup scheduled every 30 minutes
+
+🚀 Server running on port 5000
+   Environment: development
+   Max file size: 10.00MB
+
+📡 API Endpoints:
+   Part 1: PDF Operations
+   POST http://localhost:5000/api/pdf/merge
+   POST http://localhost:5000/api/pdf/split
+   POST http://localhost:5000/api/pdf/compress
+
+   Part 2: PDF to Office
+   POST http://localhost:5000/api/convert/pdf-to-word
+   POST http://localhost:5000/api/convert/pdf-to-powerpoint
+   POST http://localhost:5000/api/convert/pdf-to-excel
+
+   Part 3: Office to PDF
+   POST http://localhost:5000/api/convert/word-to-pdf
+   POST http://localhost:5000/api/convert/powerpoint-to-pdf
+   POST http://localhost:5000/api/convert/excel-to-pdf
+
+   Part 4: Image & Editing Services
+   POST http://localhost:5000/api/image/pdf-to-jpg
+   POST http://localhost:5000/api/image/jpg-to-pdf
+   POST http://localhost:5000/api/image/edit-pdf
+
+   Part 5: Security & Enhancement Services
+   POST http://localhost:5000/api/security/sign-pdf
+   POST http://localhost:5000/api/security/watermark-pdf
+   POST http://localhost:5000/api/security/txt-to-pdf
+
+   Health Check
+   GET  http://localhost:5000/api/pdf/health
+   GET  http://localhost:5000/health
+

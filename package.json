@@ -1,0 +1,29 @@
+{
+  "name": "pdf-conversion-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E Tests for PDF & Office Conversion Web Application",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:part1": "playwright test tests/part1",
+    "test:part2": "playwright test tests/part2",
+    "test:part3": "playwright test tests/part3",
+    "test:part4": "playwright test tests/part4",
+    "test:part5": "playwright test tests/part5"
+  },
+  "keywords": [
+    "e2e",
+    "testing",
+    "playwright",
+    "pdf",
+    "conversion"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.0"
+  }
+}
