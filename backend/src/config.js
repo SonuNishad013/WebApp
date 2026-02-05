@@ -25,7 +25,7 @@ export const config = {
 
   // Security
   fileTTL: parseInt(process.env.FILE_TTL) || 3600, // 1 hour
-  allowedExtensions: (process.env.ALLOWED_EXTENSIONS || '.pdf,.docx,.pptx,.xlsx,.txt,.jpg,.jpeg,.png')
+  allowedExtensions: (process.env.ALLOWED_EXTENSIONS || '.pdf,.docx,.pptx,.xlsx,.txt,.jpg,.jpeg,.png,.webp')
     .split(',')
     .map(ext => ext.trim()),
 

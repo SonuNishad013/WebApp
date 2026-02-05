@@ -1,7 +1,7 @@
 import express from 'express';
 import { upload } from '../middleware/upload.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { pdfToJPG, jpgToPDF, editPDF } from '../services/imageService.js';
+import { pdfToJPG, imageToPDF, editPDF } from '../services/imageService.js';
 import { deleteFiles } from '../utils/fileUtils.js';
 import fs from 'fs';
 import path from 'path';
@@ -110,11 +110,11 @@ router.post('/pdf-to-jpg', upload.single('file'), asyncHandler(async (req, res) 
 
 /**
  * POST /api/image/jpg-to-pdf
- * Convert JPG/PNG image(s) to PDF
+ * Convert image(s) to PDF (JPG, JPEG, PNG, WebP)
  * 
  * Request:
  * - Content-Type: multipart/form-data
- * - files: JPG/PNG files (required, one or more)
+ * - files: Image files (required, one or more - supports JPG, JPEG, PNG, WebP)
  * - pageSize: string (optional, default: 'letter')
  * - quality: number 1-100 (optional, default: 85)
  * - autoRotate: boolean (optional, default: true)
@@ -132,7 +132,7 @@ router.post('/jpg-to-pdf', upload.array('files', 50), asyncHandler(async (req, r
   }
 
   try {
-    console.log(`JPG to PDF conversion requested: ${req.files.length} file(s)`);
+    console.log(`Image to PDF conversion requested: ${req.files.length} file(s)`);
 
     // Extract options from request body
     const options = {
@@ -142,7 +142,7 @@ router.post('/jpg-to-pdf', upload.array('files', 50), asyncHandler(async (req, r
     };
 
     // Perform conversion
-    const result = await jpgToPDF(req.files, options);
+    const result = await imageToPDF(req.files, options);
 
     // Stream file to client
     const fileStream = fs.createReadStream(result.outputPath);
@@ -155,7 +155,7 @@ router.post('/jpg-to-pdf', upload.array('files', 50), asyncHandler(async (req, r
     fileStream.pipe(res);
 
     fileStream.on('end', async () => {
-      console.log('JPG to PDF conversion completed, cleaning up...');
+      console.log('Image to PDF conversion completed, cleaning up...');
       await deleteFiles([...req.files.map(f => f.path), result.outputPath]);
     });
 

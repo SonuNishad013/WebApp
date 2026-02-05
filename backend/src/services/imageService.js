@@ -87,23 +87,27 @@ export async function pdfToJPG(inputFile, options = {}) {
 }
 
 /**
- * Convert JPG image(s) to PDF
+ * Convert image(s) to PDF (JPG, JPEG, PNG, WebP)
  * Uses ImageMagick for image-to-PDF conversion
  * 
  * Pipeline:
  * Upload → Validate → Normalize → Layout Pages → PDF Render → Store → Deliver
  * 
- * @param {Array} inputFiles - Array of uploaded JPG files
+ * @param {Array} inputFiles - Array of uploaded image files
  * @param {Object} options - Conversion options
  * @returns {Object} - Conversion result with output path
  */
-export async function jpgToPDF(inputFiles, options = {}) {
+export async function imageToPDF(inputFiles, options = {}) {
   try {
     // Validate all input files are images
-    const validationPromises = inputFiles.map(file => 
-      validateFile(file.path, ['.jpg', '.jpeg', '.png'])
-    );
-    await Promise.all(validationPromises);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    for (const file of inputFiles) {
+      const ext = path.extname(file.originalname).toLowerCase();
+      if (!imageExtensions.includes(ext)) {
+        throw new Error(`File ${file.originalname} is not a supported image format. Supported formats: JPG, JPEG, PNG, WebP`);
+      }
+      await validateFile(file.path, file.originalname);
+    }
 
     const {
       pageSize = 'letter', // Page size: letter, a4, legal
@@ -144,7 +148,7 @@ export async function jpgToPDF(inputFiles, options = {}) {
     const result = await executeCommand(command, { timeout: 120000 }); // 2 minutes timeout
 
     if (!result.success) {
-      throw new Error(`JPG to PDF conversion failed: ${result.error}`);
+      throw new Error(`Image to PDF conversion failed: ${result.error}`);
     }
 
     // Verify output file exists
@@ -154,7 +158,7 @@ export async function jpgToPDF(inputFiles, options = {}) {
       throw new Error('Conversion completed but output file is not accessible');
     }
 
-    console.log('JPG to PDF conversion completed successfully');
+    console.log('Image to PDF conversion completed successfully');
 
     return {
       success: true,
@@ -165,7 +169,7 @@ export async function jpgToPDF(inputFiles, options = {}) {
       quality,
     };
   } catch (error) {
-    console.error('JPG to PDF error:', error);
+    console.error('Image to PDF error:', error);
     throw error;
   }
 }
@@ -263,3 +267,6 @@ export async function editPDF(inputFile, edits = {}) {
     throw error;
   }
 }
+
+// Backward compatibility - export jpgToPDF as alias for imageToPDF
+export { imageToPDF as jpgToPDF };

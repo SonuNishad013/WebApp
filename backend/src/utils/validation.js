@@ -56,6 +56,7 @@ export async function validateMimeType(filePath, expectedExtension) {
       '.jpg': ['image/jpeg'],
       '.jpeg': ['image/jpeg'],
       '.png': ['image/png'],
+      '.webp': ['image/webp'],
     };
 
     const expectedMimes = mimeMap[expectedExtension];
