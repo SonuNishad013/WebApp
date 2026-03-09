@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
 import {
@@ -18,6 +18,8 @@ import {
   Type,
   ArrowRight,
   ArrowLeft,
+  Sun,
+  Moon,
 } from "lucide-react";
 import MergePDF from "./components/MergePDF";
 import SplitPDF from "./components/SplitPDF";
@@ -34,6 +36,7 @@ import ImageToPDF from "./components/ImageToPDF";
 import SignPDF from "./components/SignPDF";
 import WatermarkPDF from "./components/WatermarkPDF";
 import TXTToPDF from "./components/TXTToPDF";
+import AsciiFlameCanvas from "./components/AsciiFlameCanvas";
 import "./index.css";
 
 const tools = [
@@ -44,6 +47,7 @@ const tools = [
     description: "Combine multiple PDFs into one file.",
     component: MergePDF,
     icon: Merge,
+    asciiHue: 190,
   },
   {
     id: "split",
@@ -52,6 +56,7 @@ const tools = [
     description: "Split a PDF into separate pages.",
     component: SplitPDF,
     icon: Split,
+    asciiHue: 40,
   },
   {
     id: "compress",
@@ -60,6 +65,7 @@ const tools = [
     description: "Reduce file size while keeping quality.",
     component: CompressPDF,
     icon: Shrink,
+    asciiHue: 300,
   },
   {
     id: "pdf-to-word",
@@ -68,6 +74,7 @@ const tools = [
     description: "Convert PDFs into editable Word files.",
     component: PDFToWord,
     icon: FileText,
+    asciiHue: 210,
   },
   {
     id: "pdf-to-ppt",
@@ -76,6 +83,7 @@ const tools = [
     description: "Turn PDFs into PowerPoint slides.",
     component: PDFToPowerPoint,
     icon: Presentation,
+    asciiHue: 20,
   },
   {
     id: "pdf-to-excel",
@@ -84,6 +92,7 @@ const tools = [
     description: "Extract tables into Excel spreadsheets.",
     component: PDFToExcel,
     icon: FileSpreadsheet,
+    asciiHue: 120,
   },
   {
     id: "word-to-pdf",
@@ -92,6 +101,7 @@ const tools = [
     description: "Convert DOCX documents to PDF.",
     component: WordToPDF,
     icon: FileType,
+    asciiHue: 260,
   },
   {
     id: "ppt-to-pdf",
@@ -100,6 +110,7 @@ const tools = [
     description: "Convert PPT/PPTX files to PDF.",
     component: PowerPointToPDF,
     icon: Presentation,
+    asciiHue: 15,
   },
   {
     id: "excel-to-pdf",
@@ -108,6 +119,7 @@ const tools = [
     description: "Convert XLSX sheets into PDF.",
     component: ExcelToPDF,
     icon: FileSpreadsheet,
+    asciiHue: 90,
   },
   {
     id: "edit-pdf",
@@ -116,6 +128,7 @@ const tools = [
     description: "Edit, annotate, and tweak PDFs.",
     component: EditPDF,
     icon: Edit3,
+    asciiHue: 330,
   },
   {
     id: "pdf-to-jpg",
@@ -124,6 +137,7 @@ const tools = [
     description: "Export PDF pages to JPG images.",
     component: PDFToJPG,
     icon: ImageDown,
+    asciiHue: 170,
   },
   {
     id: "jpg-to-pdf",
@@ -132,6 +146,7 @@ const tools = [
     description: "Convert images into a PDF file.",
     component: ImageToPDF,
     icon: Image,
+    asciiHue: 285,
   },
   {
     id: "sign-pdf",
@@ -140,6 +155,7 @@ const tools = [
     description: "Add signatures to your PDFs.",
     component: SignPDF,
     icon: FileSignature,
+    asciiHue: 55,
   },
   {
     id: "watermark",
@@ -148,6 +164,7 @@ const tools = [
     description: "Stamp a watermark on PDFs.",
     component: WatermarkPDF,
     icon: Stamp,
+    asciiHue: 200,
   },
   {
     id: "txt-to-pdf",
@@ -156,16 +173,17 @@ const tools = [
     description: "Convert text files into PDFs.",
     component: TXTToPDF,
     icon: Type,
+    asciiHue: 10,
   },
 ];
 
-const Header = ({ compact = false }) => (
+const Header = ({ compact = false, theme, onToggleTheme }) => (
   <motion.div
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
     className={compact ? "text-center mb-8" : "text-center mb-12"}
   >
-    <div className="flex items-center justify-center mb-4">
+    <div className="relative flex items-center justify-center mb-4">
       <motion.div
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -191,6 +209,16 @@ const Header = ({ compact = false }) => (
           Futuristic Document Processing
         </p>
       </div>
+      <button
+        type="button"
+        onClick={onToggleTheme}
+        className="absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full border border-dark-border bg-dark-surface/70 text-cyber-blue hover:text-cyber-pink transition-colors flex items-center justify-center"
+        aria-label={
+          theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        }
+      >
+        {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
     </div>
   </motion.div>
 );
@@ -215,7 +243,7 @@ const Footer = () => (
   </motion.div>
 );
 
-const HomePage = () => (
+const HomePage = ({ theme, onToggleTheme }) => (
   <motion.div
     key="home"
     initial={{ opacity: 0, y: 12 }}
@@ -224,7 +252,7 @@ const HomePage = () => (
     transition={{ duration: 0.3 }}
     className="max-w-6xl mx-auto"
   >
-    <Header />
+    <Header theme={theme} onToggleTheme={onToggleTheme} />
 
     <div className="text-center mb-10">
       <p className="text-gray-300 max-w-2xl mx-auto">
@@ -247,6 +275,7 @@ const HomePage = () => (
               to={tool.path}
               className="firecrawl-card group block p-5 h-full"
             >
+              <AsciiFlameCanvas hue={tool.asciiHue} theme={theme} />
               <div className="flex items-start justify-between">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-blue/20 to-cyber-purple/20 flex items-center justify-center">
                   <Icon className="text-cyber-blue" size={24} />
@@ -272,7 +301,7 @@ const HomePage = () => (
   </motion.div>
 );
 
-const ToolPage = ({ tool }) => {
+const ToolPage = ({ tool, theme, onToggleTheme }) => {
   const ToolComponent = tool.component;
 
   return (
@@ -284,7 +313,7 @@ const ToolPage = ({ tool }) => {
       transition={{ duration: 0.3 }}
       className="max-w-4xl mx-auto"
     >
-      <Header compact />
+      <Header compact theme={theme} onToggleTheme={onToggleTheme} />
 
       <div className="mb-6">
         <Link
@@ -305,7 +334,7 @@ const ToolPage = ({ tool }) => {
   );
 };
 
-const NotFound = () => (
+const NotFound = ({ theme, onToggleTheme }) => (
   <motion.div
     key="not-found"
     initial={{ opacity: 0, y: 12 }}
@@ -314,7 +343,7 @@ const NotFound = () => (
     transition={{ duration: 0.3 }}
     className="max-w-4xl mx-auto text-center"
   >
-    <Header compact />
+    <Header compact theme={theme} onToggleTheme={onToggleTheme} />
     <div className="bg-dark-surface/50 backdrop-blur-xl rounded-2xl p-8 border border-dark-border shadow-2xl">
       <h2 className="text-2xl font-bold text-white mb-2">Page not found</h2>
       <p className="text-gray-400 mb-6">
@@ -334,9 +363,36 @@ const NotFound = () => (
 
 function App() {
   const location = useLocation();
+  const [theme, setTheme] = useState("dark");
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem("theme");
+    if (storedTheme === "light" || storedTheme === "dark") {
+      setTheme(storedTheme);
+      return;
+    }
+
+    if (window.matchMedia) {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setTheme(prefersDark ? "dark" : "light");
+    }
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.remove("theme-light", "theme-dark");
+    document.body.classList.add(`theme-${theme}`);
+    document.body.dataset.theme = theme;
+    window.localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-surface to-dark-bg">
+    <div className="app-shell min-h-screen">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-cyber-blue/5 rounded-full blur-3xl animate-pulse-slow" />
         <div
@@ -348,15 +404,31 @@ function App() {
       <div className="relative z-10 px-4 py-8">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={
+                <HomePage theme={theme} onToggleTheme={handleToggleTheme} />
+              }
+            />
             {tools.map((tool) => (
               <Route
                 key={tool.id}
                 path={tool.path}
-                element={<ToolPage tool={tool} />}
+                element={
+                  <ToolPage
+                    tool={tool}
+                    theme={theme}
+                    onToggleTheme={handleToggleTheme}
+                  />
+                }
               />
             ))}
-            <Route path="*" element={<NotFound />} />
+            <Route
+              path="*"
+              element={
+                <NotFound theme={theme} onToggleTheme={handleToggleTheme} />
+              }
+            />
           </Routes>
         </AnimatePresence>
       </div>
