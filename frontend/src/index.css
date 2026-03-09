@@ -6,22 +6,48 @@
   font-family: 'JetBrains Mono', monospace;
   line-height: 1.5;
   font-weight: 400;
-  
+
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #0a0a0f;
-  
+
+  --app-bg: linear-gradient(135deg, #0a0a0f 0%, #151520 100%);
+  --surface: #151520;
+  --surface-border: #2a2a3e;
+  --surface-strong: rgba(21, 21, 32, 0.88);
+  --surface-soft: rgba(21, 21, 32, 0.7);
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --ascii-brightness: 60%;
+  --ascii-opacity: 0.45;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.theme-light {
+  color-scheme: light;
+  --app-bg: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+  --surface: #f1f5f9;
+  --surface-border: #d8dee8;
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --surface-soft: rgba(248, 250, 252, 0.85);
+  --text-primary: #0b0b10;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --ascii-brightness: 40%;
+  --ascii-opacity: 0.6;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0f 0%, #151520 100%);
+  background: var(--app-bg);
+  color: var(--text-primary);
 }
 
 * {
@@ -47,6 +73,18 @@ body {
   background: #3a3a4e;
 }
 
+.theme-light ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+.theme-light ::-webkit-scrollbar-thumb {
+  background: #cbd5f5;
+}
+
+.theme-light ::-webkit-scrollbar-thumb:hover {
+  background: #b6c2dd;
+}
+
 /* Glow effect for buttons and interactive elements */
 .glow-on-hover {
   transition: all 0.3s ease;
@@ -70,6 +108,43 @@ body {
   animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.app-shell {
+  background: var(--app-bg);
+  color: var(--text-primary);
+}
+
+.theme-light .text-white {
+  color: var(--text-primary);
+}
+
+.theme-light .text-gray-300 {
+  color: #3f4a5a;
+}
+
+.theme-light .text-gray-400 {
+  color: var(--text-secondary);
+}
+
+.theme-light .text-gray-500 {
+  color: var(--text-muted);
+}
+
+.theme-light .bg-dark-surface {
+  background-color: var(--surface);
+}
+
+.theme-light .bg-dark-surface\\/50 {
+  background-color: rgba(248, 250, 252, 0.8);
+}
+
+.theme-light .bg-dark-surface\\/70 {
+  background-color: rgba(248, 250, 252, 0.9);
+}
+
+.theme-light .border-dark-border {
+  border-color: var(--surface-border);
+}
+
 /* Firecrawl-style animated card glow */
 @keyframes firecrawl {
   0% {
@@ -86,10 +161,11 @@ body {
 .firecrawl-card {
   position: relative;
   border-radius: 1.25rem;
-  background: rgba(21, 21, 32, 0.7);
-  border: 1px solid #2a2a3e;
+  background: var(--surface-soft);
+  border: 1px solid var(--surface-border);
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  --ascii-hue: 190;
 }
 
 .firecrawl-card::before {
@@ -115,7 +191,7 @@ body {
   position: absolute;
   inset: 1px;
   border-radius: 1.125rem;
-  background: rgba(21, 21, 32, 0.88);
+  background: var(--surface-strong);
   z-index: 0;
 }
 
@@ -130,5 +206,23 @@ body {
 
 .firecrawl-card > * {
   position: relative;
+  z-index: 2;
+}
+
+.ascii-flame {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  bottom: 12px;
+  opacity: var(--ascii-opacity);
+  pointer-events: none;
   z-index: 1;
+  mask-image: linear-gradient(transparent, black 30%);
+}
+
+.ascii-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
