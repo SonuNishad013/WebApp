@@ -303,7 +303,10 @@ systemdict /.setopacityalpha known
 export async function txtToPDF(inputFile, options = {}) {
   try {
     // Validate input file
-    await validateFile(inputFile.path);
+    console.log("txtToPDF inputFile:", JSON.stringify(inputFile, null, 2));
+    // Validate input file
+    const filename = inputFile.originalname || path.basename(inputFile.path);
+    await validateFile(inputFile.path, filename);
 
     const {
       fontSize = 12,
@@ -337,10 +340,7 @@ export async function txtToPDF(inputFile, options = {}) {
     // LibreOffice creates the output with the same basename as input
     const libreOfficeOutput = path.join(
       outputDir,
-      path.basename(
-        inputFile.originalname,
-        path.extname(inputFile.originalname),
-      ) + ".pdf",
+      path.basename(inputFile.path, path.extname(inputFile.path)) + ".pdf",
     );
 
     // Move/rename to our desired output path

@@ -1,52 +1,73 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, FileText } from 'lucide-react';
-import MergePDF from './components/MergePDF';
-import SplitPDF from './components/SplitPDF';
-import CompressPDF from './components/CompressPDF';
-import PDFToWord from './components/PDFToWord';
-import PDFToPowerPoint from './components/PDFToPowerPoint';
-import PDFToExcel from './components/PDFToExcel';
-import WordToPDF from './components/WordToPDF';
-import PowerPointToPDF from './components/PowerPointToPDF';
-import ExcelToPDF from './components/ExcelToPDF';
-import EditPDF from './components/EditPDF';
-import PDFToJPG from './components/PDFToJPG';
-import ImageToPDF from './components/ImageToPDF';
-import SignPDF from './components/SignPDF';
-import WatermarkPDF from './components/WatermarkPDF';
-import TXTToPDF from './components/TXTToPDF';
-import './index.css';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link, Routes, Route, useLocation } from "react-router-dom";
+import {
+  Zap,
+  FileText,
+  Merge,
+  Split,
+  Shrink,
+  Presentation,
+  FileSpreadsheet,
+  FileType,
+  Edit3,
+  ImageDown,
+  Image,
+  FileSignature,
+  Stamp,
+  Type,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
+import MergePDF from "./components/MergePDF";
+import SplitPDF from "./components/SplitPDF";
+import CompressPDF from "./components/CompressPDF";
+import PDFToWord from "./components/PDFToWord";
+import PDFToPowerPoint from "./components/PDFToPowerPoint";
+import PDFToExcel from "./components/PDFToExcel";
+import WordToPDF from "./components/WordToPDF";
+import PowerPointToPDF from "./components/PowerPointToPDF";
+import ExcelToPDF from "./components/ExcelToPDF";
+import EditPDF from "./components/EditPDF";
+import PDFToJPG from "./components/PDFToJPG";
+import ImageToPDF from "./components/ImageToPDF";
+import SignPDF from "./components/SignPDF";
+import WatermarkPDF from "./components/WatermarkPDF";
+import TXTToPDF from "./components/TXTToPDF";
+import "./index.css";
 
 function App() {
-  const [activeTab, setActiveTab] = useState('merge');
-//Neel Thakur, checking the app tsx.
+  const [activeTab, setActiveTab] = useState("merge");
+  //Neel Thakur, checking the app tsx.
   const tabs = [
-    { id: 'merge', label: 'Merge', component: MergePDF },
-    { id: 'split', label: 'Split', component: SplitPDF },
-    { id: 'compress', label: 'Compress', component: CompressPDF },
-    { id: 'pdf-to-word', label: 'PDF → Word', component: PDFToWord },
-    { id: 'pdf-to-ppt', label: 'PDF → PPT', component: PDFToPowerPoint },
-    { id: 'pdf-to-excel', label: 'PDF → Excel', component: PDFToExcel },
-    { id: 'word-to-pdf', label: 'Word → PDF', component: WordToPDF },
-    { id: 'ppt-to-pdf', label: 'PPT → PDF', component: PowerPointToPDF },
-    { id: 'excel-to-pdf', label: 'Excel → PDF', component: ExcelToPDF },
-    { id: 'edit-pdf', label: 'Edit PDF', component: EditPDF },
-    { id: 'pdf-to-jpg', label: 'PDF → JPG', component: PDFToJPG },
-    { id: 'jpg-to-pdf', label: 'Image → PDF', component: ImageToPDF },
-    { id: 'sign-pdf', label: 'Sign PDF', component: SignPDF },
-    { id: 'watermark', label: 'Watermark', component: WatermarkPDF },
-    { id: 'txt-to-pdf', label: 'TXT → PDF', component: TXTToPDF },
+    { id: "merge", label: "Merge", component: MergePDF },
+    { id: "split", label: "Split", component: SplitPDF },
+    { id: "compress", label: "Compress", component: CompressPDF },
+    { id: "pdf-to-word", label: "PDF → Word", component: PDFToWord },
+    { id: "pdf-to-ppt", label: "PDF → PPT", component: PDFToPowerPoint },
+    { id: "pdf-to-excel", label: "PDF → Excel", component: PDFToExcel },
+    { id: "word-to-pdf", label: "Word → PDF", component: WordToPDF },
+    { id: "ppt-to-pdf", label: "PPT → PDF", component: PowerPointToPDF },
+    { id: "excel-to-pdf", label: "Excel → PDF", component: ExcelToPDF },
+    { id: "edit-pdf", label: "Edit PDF", component: EditPDF },
+    { id: "pdf-to-jpg", label: "PDF → JPG", component: PDFToJPG },
+    { id: "jpg-to-pdf", label: "Image → PDF", component: ImageToPDF },
+    { id: "sign-pdf", label: "Sign PDF", component: SignPDF },
+    { id: "watermark", label: "Watermark", component: WatermarkPDF },
+    { id: "txt-to-pdf", label: "TXT → PDF", component: TXTToPDF },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component;
+  const ActiveComponent = tabs.find((tab) => tab.id === activeTab)?.component;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-surface to-dark-bg">
       {/* Animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-cyber-blue/5 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-cyber-purple/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+        <div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-cyber-purple/5 rounded-full blur-3xl animate-pulse-slow"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       {/* Main content */}
@@ -75,7 +96,9 @@ function App() {
               <h1 className="text-5xl font-bold bg-gradient-to-r from-cyber-blue via-cyber-purple to-cyber-pink bg-clip-text text-transparent">
                 PDF Converter
               </h1>
-              <p className="text-gray-400 text-sm mt-1">Futuristic Document Processing</p>
+              <p className="text-gray-400 text-sm mt-1">
+                Futuristic Document Processing
+              </p>
             </div>
           </div>
         </motion.div>
@@ -95,9 +118,10 @@ function App() {
                 className={`
                   py-3 px-4 rounded-lg font-semibold text-xs md:text-sm
                   transition-all duration-300 relative overflow-hidden
-                  ${activeTab === tab.id
-                    ? 'text-white'
-                    : 'text-gray-400 hover:text-white'
+                  ${
+                    activeTab === tab.id
+                      ? "text-white"
+                      : "text-gray-400 hover:text-white"
                   }
                 `}
               >
@@ -105,7 +129,7 @@ function App() {
                   <motion.div
                     layoutId="activeTab"
                     className="absolute inset-0 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-lg"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <span className="relative z-10">{tab.label}</span>
@@ -143,10 +167,13 @@ function App() {
         >
           <div className="flex items-center justify-center space-x-2">
             <FileText size={16} />
-            <span>Parts 1-5: PDF Processing, Conversion, Image & Security Services</span>
+            <span>
+              Parts 1-5: PDF Processing, Conversion, Image & Security Services
+            </span>
           </div>
           <p className="mt-2">
-            Powered by qpdf • Ghostscript • LibreOffice • Poppler • ImageMagick • OpenSSL
+            Powered by qpdf • Ghostscript • LibreOffice • Poppler • ImageMagick
+            • OpenSSL
           </p>
         </motion.div>
       </div>

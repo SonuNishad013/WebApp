@@ -69,3 +69,66 @@ body {
 .loading-pulse {
   animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Firecrawl-style animated card glow */
+@keyframes firecrawl {
+  0% {
+    transform: translateX(-30%) rotate(0deg);
+  }
+  50% {
+    transform: translateX(30%) rotate(180deg);
+  }
+  100% {
+    transform: translateX(-30%) rotate(360deg);
+  }
+}
+
+.firecrawl-card {
+  position: relative;
+  border-radius: 1.25rem;
+  background: rgba(21, 21, 32, 0.7);
+  border: 1px solid #2a2a3e;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.firecrawl-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 240, 255, 0),
+    rgba(255, 0, 110, 0.65),
+    rgba(176, 0, 255, 0.75),
+    rgba(0, 240, 255, 0.75),
+    rgba(0, 240, 255, 0)
+  );
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: firecrawl 6s linear infinite;
+}
+
+.firecrawl-card::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 1.125rem;
+  background: rgba(21, 21, 32, 0.88);
+  z-index: 0;
+}
+
+.firecrawl-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.firecrawl-card:hover::before {
+  opacity: 1;
+}
+
+.firecrawl-card > * {
+  position: relative;
+  z-index: 1;
+}
